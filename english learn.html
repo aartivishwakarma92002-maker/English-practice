@@ -1,0 +1,670 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Daily English Practice</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f6ff;
+  color: #26304a;
+  line-height: 1.6;
+}
+
+header {
+  background: linear-gradient(135deg, #4338ca, #9333ea);
+  color: white;
+  text-align: center;
+  padding: 38px 18px;
+}
+
+header h1 {
+  margin: 0 0 8px;
+  font-size: 32px;
+}
+
+nav {
+  background: white;
+  padding: 12px;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 8px #00000010;
+}
+
+nav a {
+  color: #4338ca;
+  text-decoration: none;
+  margin: 5px 10px;
+  font-weight: bold;
+  display: inline-block;
+}
+
+main {
+  max-width: 950px;
+  margin: auto;
+  padding: 18px;
+}
+
+.card {
+  background: white;
+  padding: 22px;
+  margin: 18px 0;
+  border-radius: 18px;
+  box-shadow: 0 4px 15px #252b4610;
+}
+
+h2 {
+  color: #4338ca;
+  margin-top: 0;
+}
+
+button, select, input, textarea {
+  font: inherit;
+  padding: 11px;
+  border: 1px solid #d8dcef;
+  border-radius: 9px;
+}
+
+button {
+  background: #4f46e5;
+  color: white;
+  cursor: pointer;
+  border: none;
+  margin: 4px;
+}
+
+button:hover {
+  background: #3730a3;
+}
+
+.secondary {
+  background: #e8eafe;
+  color: #3730a3;
+}
+
+.timer {
+  font-size: 54px;
+  font-weight: bold;
+  text-align: center;
+  margin: 12px;
+}
+
+.center {
+  text-align: center;
+}
+
+.word {
+  padding: 12px;
+  border-bottom: 1px solid #eceef6;
+}
+
+.word:last-child {
+  border-bottom: none;
+}
+
+.word strong {
+  font-size: 18px;
+  color: #4338ca;
+}
+
+.hindi {
+  color: #64748b;
+}
+
+.question {
+  background: #eef2ff;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 18px;
+  margin: 12px 0;
+}
+
+textarea {
+  width: 100%;
+  min-height: 110px;
+  resize: vertical;
+}
+
+#quizOptions button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: #f0f2ff;
+  color: #26304a;
+  margin: 8px 0;
+}
+
+#quizOptions button:hover {
+  background: #dddfff;
+}
+
+#quizFeedback, #timerStatus, #saveStatus {
+  font-weight: bold;
+  color: #4338ca;
+}
+
+.progress-track {
+  height: 12px;
+  background: #e5e7eb;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+#progressBar {
+  width: 0%;
+  height: 100%;
+  background: #7c3aed;
+  transition: width .3s;
+}
+
+footer {
+  background: #252b46;
+  color: white;
+  text-align: center;
+  padding: 22px;
+}
+
+@media (max-width: 600px) {
+  header h1 { font-size: 25px; }
+  .timer { font-size: 44px; }
+  .card { padding: 16px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🌷 My Daily English Practice</h1>
+  <p>Learn English in just 15–20 minutes a day!</p>
+  <p>Learn • Practise • Improve • Speak Confidently</p>
+</header>
+
+<nav>
+  <a href="#timerSection">Timer</a>
+  <a href="#vocabulary">Vocabulary</a>
+  <a href="#quiz">Quiz</a>
+  <a href="#speaking">Speaking</a>
+  <a href="#grammar">Grammar</a>
+  <a href="#progress">Progress</a>
+</nav>
+
+<main>
+
+<!-- TIMER -->
+<section class="card center" id="timerSection">
+  <h2>⏰ Daily Practice Timer</h2>
+  <p>Choose how much time you have today.</p>
+
+  <select id="duration">
+    <option value="900">15 minutes</option>
+    <option value="1200">20 minutes</option>
+  </select>
+
+  <div class="timer" id="timer">15:00</div>
+
+  <button id="startBtn">Start</button>
+  <button class="secondary" id="pauseBtn">Pause</button>
+  <button class="secondary" id="resetBtn">Reset</button>
+
+  <p id="timerStatus">Ready to practise!</p>
+</section>
+
+<!-- VOCABULARY -->
+<section class="card" id="vocabulary">
+  <h2>📚 Daily Vocabulary</h2>
+  <p>Learn these five words and say the examples aloud.</p>
+  <div id="wordList"></div>
+  <button id="learnedBtn">Mark words as revised ✓</button>
+  <p id="wordStatus"></p>
+</section>
+
+<!-- QUIZ -->
+<section class="card" id="quiz">
+  <h2>🧠 Vocabulary Quiz</h2>
+  <p>Choose the correct Hindi meaning.</p>
+
+  <div class="question" id="quizQuestion">
+    What does "Improve" mean?
+  </div>
+
+  <div id="quizOptions"></div>
+  <p id="quizFeedback" aria-live="polite"></p>
+
+  <button id="nextQuizBtn">Next Question →</button>
+  <p>Correct answers: <strong id="score">0</strong></p>
+</section>
+
+<!-- SPEAKING -->
+<section class="card" id="speaking">
+  <h2>🗣️ English Speaking Practice</h2>
+  <p>First speak your answer aloud. Then write it below.</p>
+
+  <div class="question" id="speakingQuestion">
+    What do you usually do in the morning?
+  </div>
+
+  <button id="newQuestionBtn">Another Question</button>
+
+  <textarea id="speakingAnswer"
+    placeholder="Write your answer in English..."></textarea>
+
+  <button id="saveAnswerBtn">Save Answer</button>
+  <button class="secondary" id="clearAnswerBtn">Clear</button>
+
+  <p id="saveStatus"></p>
+  <p class="hindi">
+    Tip: You can copy your answer into ChatGPT to get
+    grammar corrections and a Hindi explanation.
+  </p>
+</section>
+
+<!-- GRAMMAR -->
+<section class="card" id="grammar">
+  <h2>✍️ Simple Grammar Practice</h2>
+
+  <h3>1. Simple Present</h3>
+  <p>Use it for habits and routines.</p>
+  <p><strong>Example:</strong> I study English every day.</p>
+
+  <h3>2. Simple Past</h3>
+  <p>Use it for completed actions in the past.</p>
+  <p><strong>Example:</strong> I watched a movie yesterday.</p>
+
+  <h3>3. Simple Future</h3>
+  <p>Use it for future actions.</p>
+  <p><strong>Example:</strong> I will practise tomorrow.</p>
+
+  <h3>Correct this sentence</h3>
+  <p>"I want to speak English fluent."</p>
+
+  <button id="showCorrectionBtn">Show Correct Answer</button>
+  <p id="correction" hidden>
+    Correct: "I want to speak English fluently."
+    <br>Hindi: मैं अंग्रेज़ी धाराप्रवाह बोलना चाहती हूँ।
+  </p>
+</section>
+
+<!-- PROGRESS -->
+<section class="card" id="progress">
+  <h2>🌟 My Learning Progress</h2>
+  <p>Vocabulary revisions completed: <strong id="revisionCount">0</strong></p>
+  <p>Speaking answers saved: <strong id="answerCount">0</strong></p>
+  <p>Quiz correct answers: <strong id="progressScore">0</strong></p>
+
+  <div class="progress-track">
+    <div id="progressBar"></div>
+  </div>
+
+  <p class="hindi">
+    Practise regularly. Mistakes are part of learning!
+  </p>
+</section>
+
+</main>
+
+<footer>
+  <p>💜 Believe in yourself. Practise a little every day.</p>
+  <p>My Daily English Practice</p>
+</footer>
+
+<script>
+// ---------- DAILY VOCABULARY ----------
+const words = [
+  {
+    word: "Improve",
+    hindi: "बेहतर बनाना",
+    example: "I want to improve my English."
+  },
+  {
+    word: "Confident",
+    hindi: "आत्मविश्वासी",
+    example: "I feel confident when I practise."
+  },
+  {
+    word: "Usually",
+    hindi: "आमतौर पर",
+    example: "I usually study in the evening."
+  },
+  {
+    word: "Remember",
+    hindi: "याद रखना",
+    example: "I remember new words by revising them."
+  },
+  {
+    word: "Practice",
+    hindi: "अभ्यास करना",
+    example: "I practise English every day."
+  },
+  {
+    word: "Decide",
+    hindi: "निर्णय लेना",
+    example: "I decided to learn English."
+  },
+  {
+    word: "Explain",
+    hindi: "समझाना",
+    example: "Please explain this word."
+  },
+  {
+    word: "Enjoy",
+    hindi: "आनंद लेना",
+    example: "I enjoy learning new things."
+  },
+  {
+    word: "Courage",
+    hindi: "हिम्मत",
+    example: "I have the courage to speak."
+  },
+  {
+    word: "Progress",
+    hindi: "प्रगति",
+    example: "I can see my progress."
+  }
+];
+
+function getTodayIndex() {
+  const start = new Date(new Date().getFullYear(), 0, 0);
+  const today = new Date();
+  const day = Math.floor((today - start) / 86400000);
+  return day * 5 % words.length;
+}
+
+const todayWords = [];
+for (let i = 0; i < 5; i++) {
+  todayWords.push(words[(getTodayIndex() + i) % words.length]);
+}
+
+const wordList = document.getElementById("wordList");
+
+todayWords.forEach(item => {
+  const div = document.createElement("div");
+  div.className = "word";
+
+  const strong = document.createElement("strong");
+  strong.textContent = item.word;
+
+  const hindi = document.createElement("div");
+  hindi.className = "hindi";
+  hindi.textContent = "Hindi: " + item.hindi;
+
+  const example = document.createElement("div");
+  example.textContent = "Example: " + item.example;
+
+  div.append(strong, hindi, example);
+  wordList.appendChild(div);
+});
+
+// ---------- TIMER ----------
+let remaining = 900;
+let timerInterval = null;
+
+const timerDisplay = document.getElementById("timer");
+const durationSelect = document.getElementById("duration");
+const timerStatus = document.getElementById("timerStatus");
+
+function showTime() {
+  const minutes = Math.floor(remaining / 60);
+  const seconds = remaining % 60;
+
+  timerDisplay.textContent =
+    String(minutes).padStart(2, "0") + ":" +
+    String(seconds).padStart(2, "0");
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+}
+
+document.getElementById("startBtn").addEventListener("click", () => {
+  if (timerInterval) return;
+
+  if (remaining <= 0) {
+    remaining = Number(durationSelect.value);
+  }
+
+  timerStatus.textContent = "Keep going! You are doing great.";
+
+  timerInterval = setInterval(() => {
+    remaining--;
+    showTime();
+
+    if (remaining <= 0) {
+      stopTimer();
+      timerStatus.textContent = "Time is up! Great work! 🎉";
+    }
+  }, 1000);
+});
+
+document.getElementById("pauseBtn").addEventListener("click", () => {
+  stopTimer();
+  timerStatus.textContent = "Timer paused.";
+});
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  stopTimer();
+  remaining = Number(durationSelect.value);
+  showTime();
+  timerStatus.textContent = "Timer reset. Ready to start!";
+});
+
+durationSelect.addEventListener("change", () => {
+  stopTimer();
+  remaining = Number(durationSelect.value);
+  showTime();
+  timerStatus.textContent = "New timer selected.";
+});
+
+showTime();
+
+// ---------- QUIZ ----------
+let quizIndex = 0;
+let score = 0;
+let answered = false;
+
+const quizItems = [
+  { word: "Improve", correct: "बेहतर बनाना",
+    options: ["भूलना", "बेहतर बनाना", "सोना", "चलना"] },
+  { word: "Confident", correct: "आत्मविश्वासी",
+    options: ["थका हुआ", "उदास", "आत्मविश्वासी", "भूखा"] },
+  { word: "Remember", correct: "याद रखना",
+    options: ["याद रखना", "खरीदना", "लिखना", "खेलना"] },
+  { word: "Enjoy", correct: "आनंद लेना",
+    options: ["रोना", "आनंद लेना", "भूलना", "रुकना"] },
+  { word: "Courage", correct: "हिम्मत",
+    options: ["डर", "हिम्मत", "पानी", "किताब"] },
+  { word: "Progress", correct: "प्रगति",
+    options: ["प्रगति", "समस्या", "रात", "दरवाज़ा"] }
+];
+
+function loadQuiz() {
+  const item = quizItems[quizIndex % quizItems.length];
+  document.getElementById("quizQuestion").textContent =
+    'What does "' + item.word + '" mean?';
+
+  const optionsBox = document.getElementById("quizOptions");
+  optionsBox.replaceChildren();
+  document.getElementById("quizFeedback").textContent = "";
+  answered = false;
+
+  item.options.forEach(option => {
+    const button = document.createElement("button");
+    button.textContent = option;
+
+    button.addEventListener("click", () => {
+      if (answered) return;
+      answered = true;
+
+      if (option === item.correct) {
+        score++;
+        document.getElementById("quizFeedback").textContent =
+          "Correct! Well done! 🎉";
+      } else {
+        document.getElementById("quizFeedback").textContent =
+          "Correct answer: " + item.correct;
+      }
+
+      document.getElementById("score").textContent = score;
+      document.getElementById("progressScore").textContent = score;
+      updateProgress();
+    });
+
+    optionsBox.appendChild(button);
+  });
+}
+
+document.getElementById("nextQuizBtn").addEventListener("click", () => {
+  quizIndex++;
+  loadQuiz();
+});
+
+loadQuiz();
+
+// ---------- SPEAKING QUESTIONS ----------
+const questions = [
+  "What do you usually do in the morning?",
+  "Why do you want to improve your English?",
+  "What do you like to do in your free time?",
+  "What did you learn today?",
+  "Describe your family in three sentences.",
+  "What is your favourite subject and why?",
+  "What will you do tomorrow?",
+  "Describe your daily routine.",
+  "What makes you happy?",
+  "What is one new word you learned today?"
+];
+
+let questionIndex = 0;
+let savedAnswers = 0;
+
+document.getElementById("newQuestionBtn").addEventListener("click", () => {
+  questionIndex = (questionIndex + 1) % questions.length;
+  document.getElementById("speakingQuestion").textContent =
+    questions[questionIndex];
+  document.getElementById("saveStatus").textContent = "";
+});
+
+document.getElementById("saveAnswerBtn").addEventListener("click", () => {
+  const answer = document.getElementById("speakingAnswer").value.trim();
+
+  if (!answer) {
+    document.getElementById("saveStatus").textContent =
+      "Please write your answer first.";
+    return;
+  }
+
+  try {
+    const answers = JSON.parse(
+      localStorage.getItem("englishAnswers") || "[]"
+    );
+
+    answers.push({
+      question: document.getElementById("speakingQuestion").textContent,
+      answer: answer,
+      date: new Date().toLocaleDateString()
+    });
+
+    localStorage.setItem("englishAnswers", JSON.stringify(answers));
+    savedAnswers = answers.length;
+
+    document.getElementById("answerCount").textContent = savedAnswers;
+    document.getElementById("saveStatus").textContent =
+      "Your answer was saved in this browser! ✓";
+
+    updateProgress();
+  } catch (error) {
+    document.getElementById("saveStatus").textContent =
+      "Saving is unavailable in this browser.";
+  }
+});
+
+document.getElementById("clearAnswerBtn").addEventListener("click", () => {
+  document.getElementById("speakingAnswer").value = "";
+  document.getElementById("saveStatus").textContent = "";
+});
+
+// ---------- GRAMMAR ----------
+document.getElementById("showCorrectionBtn").addEventListener("click", () => {
+  const correction = document.getElementById("correction");
+  correction.hidden = !correction.hidden;
+
+  document.getElementById("showCorrectionBtn").textContent =
+    correction.hidden ? "Show Correct Answer" : "Hide Correct Answer";
+});
+
+// ---------- PROGRESS ----------
+let revisionCount = 0;
+
+document.getElementById("learnedBtn").addEventListener("click", () => {
+  const today = new Date().toDateString();
+
+  try {
+    const savedDay = localStorage.getItem("revisionDay");
+
+    if (savedDay !== today) {
+      revisionCount++;
+      localStorage.setItem("revisionDay", today);
+      localStorage.setItem("revisionCount", revisionCount);
+      localStorage.setItem("revisionDay", today);
+    } else {
+      document.getElementById("wordStatus").textContent =
+        "Today's words are already marked as revised.";
+      return;
+    }
+
+    document.getElementById("wordStatus").textContent =
+      "Great! Today's words are revised. ✓";
+    document.getElementById("revisionCount").textContent = revisionCount;
+    updateProgress();
+  } catch (error) {
+    document.getElementById("wordStatus").textContent =
+      "Great work! You revised today's words.";
+  }
+});
+
+function updateProgress() {
+  const revisions = Number(
+    localStorage.getItem("revisionCount") || 0
+  );
+
+  const answers = Number(
+    document.getElementById("answerCount").textContent || 0
+  );
+
+  const quizProgress = Math.min(score, 6);
+  const completed = Math.min(revisions, 1) + Math.min(answers, 1)
+    + (quizProgress / 6);
+
+  document.getElementById("progressBar").style.width =
+    Math.min(100, completed / 3 * 100) + "%";
+}
+
+try {
+  revisionCount = Number(localStorage.getItem("revisionCount") || 0);
+  savedAnswers = JSON.parse(
+    localStorage.getItem("englishAnswers") || "[]"
+  ).length;
+
+  document.getElementById("revisionCount").textContent = revisionCount;
+  document.getElementById("answerCount").textContent = savedAnswers;
+  updateProgress();
+} catch (error) {
+  // The learning activities can still be used if storage is unavailable.
+}
+</script>
+
+</body>
+</html>
+
+
